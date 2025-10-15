@@ -22,6 +22,7 @@ from queens.utils.imports import extract_type_checking_imports, import_class_fro
 
 if TYPE_CHECKING:
     from queens.parameters.random_fields.fourier import Fourier
+    from queens.parameters.random_fields.gpr_random_field import GPRRandomField
     from queens.parameters.random_fields.karhunen_loeve import KarhunenLoeve
     from queens.parameters.random_fields.piece_wise import PieceWise
 
