@@ -20,7 +20,9 @@ import numpy as np
 from scipy.spatial.distance import pdist, squareform
 import tensorflow as tf
 import gpflow
-
+import os
+import random
+from dask.distributed import get_worker
 from typing import Optional, Sequence, List, Union, Iterable
 from check_shapes import inherit_check_shapes, check_shapes
 from check_shapes import check_shape as cs
@@ -319,7 +321,7 @@ class GPRRandomField(RandomField):
         Returns:
             samples (np.ndarray): Drawn samples
         """
-        mean_distribution = Uniform(lower_bound=-1, upper_bound=1)
+        mean_distribution = MeanFieldNormal(mean=0, variance=1, dimension=1)
         return mean_distribution.draw(num_samples)
         # return np.zeros(num_samples, self.dimension)
 
@@ -360,9 +362,15 @@ class GPRRandomField(RandomField):
             (self.coords["coords"][:, 0], self.coords["coords"][:, 1], self.coords["coords"][:, 2]),
             axis=-1,
         ).reshape(-1, 3)
+        # os.environ['PYTHONHASHSEED']=str(0)
+        tf.random.set_seed(0)
+        # np.random.seed(0)
+        # random.seed(0)
         samples_expanded = np.array(
             self.distribution.predict_f_samples(sample_coords, num_samples=1)
         ).reshape(1, -1)
+        worker = get_worker()
+        worker.log_event("samples_expanded", samples_expanded)
         return samples_expanded
 
     def latent_gradient(self, upstream_gradient):
