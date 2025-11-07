@@ -17,7 +17,6 @@
 import logging
 
 import matplotlib.pyplot as plt
-import numpy as np
 
 from queens.iterators._iterator import Iterator
 from queens.utils.logger_settings import log_init_args
@@ -67,8 +66,9 @@ class MonteCarlo(Iterator):
 
     def pre_run(self):
         """Generate samples for subsequent MC analysis and update model."""
-        np.random.seed(self.seed)
-        self.samples = self.parameters.draw_samples(self.num_samples)
+        # Pass seed directly to draw_samples for deterministic per-sample generation
+        # This ensures reproducibility even when using parallel schedulers
+        self.samples = self.parameters.draw_samples(self.num_samples, base_seed=self.seed)
 
     def core_run(self):
         """Run Monte Carlo Analysis on model."""

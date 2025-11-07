@@ -91,22 +91,43 @@ class Parameters:
         self.random_field_flag = random_field_flag
         self.names = list(parameters.keys())
 
-    def draw_samples(self, num_samples):
+    def draw_samples(self, num_samples, base_seed=None):
         """Draw samples from all parameters.
 
         Args:
             num_samples (int): The number of samples to draw for each parameter.
+            base_seed (int, optional): Base seed to derive per-sample seeds from. If provided,
+                                     generates deterministic samples even in parallel execution.
 
         Returns:
             samples (np.ndarray): Drawn samples
         """
         samples = np.zeros((num_samples, self.num_parameters))
-        current_index = 0
-        for parameter in self.to_list():
-            samples[:, current_index : current_index + parameter.dimension] = parameter.draw(
-                num_samples
-            )
-            current_index += parameter.dimension
+
+        # If no base_seed, preserve original vectorized behavior
+        if base_seed is None:
+            current_index = 0
+            for parameter in self.to_list():
+                samples[:, current_index : current_index + parameter.dimension] = parameter.draw(
+                    num_samples
+                )
+                current_index += parameter.dimension
+            return samples
+
+        # Deterministic per-sample drawing using spawned SeedSequences
+        # This avoids relying on global RNG state stability across parallel workers
+        ss = np.random.SeedSequence(base_seed)
+        child_seqs = ss.spawn(num_samples)  # spawn child sequences for each sample
+
+        for i, child in enumerate(child_seqs):
+            np.random.seed(int(child.generate_state(1)[0]))
+            current_index = 0
+            for parameter in self.to_list():
+                drawn = parameter.draw(1)  # Draw single sample
+                samples[i, current_index : current_index + parameter.dimension] = np.atleast_2d(
+                    drawn
+                ).reshape(-1)
+                current_index += parameter.dimension
         return samples
 
     def joint_logpdf(self, samples):
