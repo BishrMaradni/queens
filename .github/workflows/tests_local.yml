@@ -85,6 +85,12 @@ jobs:
         uses: apache/skywalking-eyes/header@v0.4.0
       - name: Check conventional commit messages
         uses: webiny/action-conventional-commits@v1.3.0
+      - name: Add tutorial dependencies
+        env:
+          PYTHON_PACKAGE_MANAGER: ${{steps.environment.outputs.ppm}}
+        run: |
+            $PYTHON_PACKAGE_MANAGER activate queens
+            pip install -e .[tutorial]
       - name: Run pytest
         run: |
           $PYTHON_PACKAGE_MANAGER activate queens

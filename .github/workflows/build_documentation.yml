@@ -24,6 +24,12 @@ jobs:
       - name: Create Python environment
         id: environment
         uses: ./.github/actions/create_python_environment
+      - name: Add tutorial dependencies
+        env:
+          PYTHON_PACKAGE_MANAGER: ${{steps.environment.outputs.ppm}}
+        run: |
+            $PYTHON_PACKAGE_MANAGER activate queens
+            pip install -e .[tutorial]
       - name: Sphinx build
         env:
           PYTHON_PACKAGE_MANAGER: ${{steps.environment.outputs.ppm}}
