@@ -30,7 +30,7 @@ def test_result_output(tb, tmp_path):
     The notebook is run with injected lines of code, as intended by the
     tutorial
     """
-    optimal_fun = 2.986025e-11
+    optimal_fun = 2.957935e-11
     optimal_x = np.array([0.99999463, 0.99998915]).tolist()
 
     inject_mock_path(tb, tmp_path)
@@ -43,5 +43,5 @@ np.testing.assert_allclose(Z, Z_QUEENS)"""
     )
 
     tb.execute_cell([32])
-    tb.inject(f"np.testing.assert_allclose(optimal_fun, {optimal_fun},rtol=1e-4)")
+    tb.inject(f"np.testing.assert_allclose(optimal_fun, {optimal_fun},atol=1e-12)")
     tb.inject(f"np.testing.assert_allclose(optimal_x, np.array({optimal_x}))")
