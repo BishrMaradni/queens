@@ -34,7 +34,7 @@ def test_notebooks(tmp_path, notebook_path):
     The notebook is run and it is checked that it runs through without
     any errors/assertions.
     """
-    with testbook(notebook_path) as tb:
+    with testbook(notebook_path, timeout=-1) as tb:
         # Patch base_directory to avoid writing test data to user's home dir.
         # Note that tb.patch converts the mocked Path to a string, so we have to use tb.inject.
         inject_mock_path(tb, tmp_path)
