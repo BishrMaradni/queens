@@ -387,6 +387,9 @@ texinfo_documents = [
 
 # -- Options for Jupyter notebook output -------------------------------------------
 
+# ensure nbsphinx uses the QUEENS conda env kernel (optional step)
+nbsphinx_kernel_name = "queens"
+
 # Toggle to build Jupyter notebook docs (show with output)
 nbsphinx_execute = "always"  # or 'auto' or 'never'
 
