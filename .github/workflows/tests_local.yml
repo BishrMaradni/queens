@@ -99,8 +99,7 @@ jobs:
       - name: Run pytest for tutorials
         run: |
           $PYTHON_PACKAGE_MANAGER activate queens
-          pytest -v -m "tutorial_tests" --cov --cov-report=term --cov-report=html:html_coverage_report --cov-report=xml:xml_coverage_report.xml $TEST_TIMING_OPTION --color=yes -o junit_logging=all --junitxml=test_junit.xml
-          python .github/xml_summaries_to_md.py test_junit.xml xml_coverage_report.xml >> $GITHUB_STEP_SUMMARY
+          pytest -v -m "tutorial_tests"
       - name: Upload coverage report
         uses: actions/upload-pages-artifact@v3
         with:
