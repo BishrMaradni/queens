@@ -30,6 +30,7 @@ jobs:
         run: |
             $PYTHON_PACKAGE_MANAGER activate queens
             pip install -e .[tutorial]
+            python -m ipykernel install --user --name queens --display-name "Python (queens)"
       - name: Sphinx build
         env:
           PYTHON_PACKAGE_MANAGER: ${{steps.environment.outputs.ppm}}
