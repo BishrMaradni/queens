@@ -29,7 +29,6 @@ from queens.utils.path import relative_path_from_root
 sys.path.insert(1, str(relative_path_from_root("test_utils").resolve()))
 from get_queens_example_from_readme import (  # pylint: disable=import-error, wrong-import-position,wrong-import-order
     extract_from_markdown_file_by_marker,
-    get_queens_example_from_readme,
 )
 
 
@@ -56,15 +55,6 @@ def relative_to_doc_source(relative_path):
         pathlib.Path: Path relative from documentation
     """
     return relative_path_from_root("doc/source/" + relative_path)
-
-
-def create_tutorial_from_readme():
-    """Create tutorial from readme."""
-    example = get_queens_example_from_readme(".")
-    tutorial_template = get_template_path_by_name("1-monte_carlo_uq.rst.j2")
-    tutorial = relative_to_doc_source("tutorials/1-monte_carlo_uq.rst")
-
-    inject({"example_text": example.replace("\n", "\n   ")}, tutorial_template, tutorial)
 
 
 def remove_markdown_emojis(md_text):
@@ -309,7 +299,6 @@ def copy_tutorials():
 def main():
     """Create all the rst files."""
     create_intro()
-    create_tutorial_from_readme()
     copy_tutorials()
     create_development()
     create_overview()
