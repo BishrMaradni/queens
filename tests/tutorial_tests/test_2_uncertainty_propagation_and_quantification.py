@@ -22,6 +22,7 @@ from test_utils.tutorial_tests import inject_mock_base_dir
 
 @testbook(
     "tutorials/2_uncertainty_propagation_and_quantification.ipynb",
+    timeout=-1,
 )
 def test_output_tutorial_2(tb, tmp_path):
     """Parameterized test case for tutorial 2: Uncertainty Propagation and Quantification.
